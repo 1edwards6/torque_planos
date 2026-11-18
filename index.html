@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#edf3ff">
+  <title>Laboratorio de fuerzas y torque</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-mark">∑</div>
+      <div>
+        <p class="eyebrow">LABORATORIO INTERACTIVO DE FÍSICA</p>
+        <h1>Fuerzas, planos inclinados y torque</h1>
+        <p class="subtitle">Explora, modifica los parámetros y observa cómo las matemáticas describen el movimiento.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="tabs" aria-label="Temas del laboratorio">
+      <button class="tab active" data-tab="plane">01 · Plano inclinado</button>
+      <button class="tab" data-tab="door">02 · Torque y puerta</button>
+      <button class="tab" data-tab="beam">03 · Vigas y equilibrio</button>
+      <button class="tab" data-tab="challenge">04 · Reto contrarreloj</button>
+    </nav>
+
+    <section class="panel active" id="panel-plane">
+      <div class="section-heading">
+        <div><span class="section-kicker">FUERZAS Y MOVIMIENTO</span><h2>¿Por qué se desliza un bloque?</h2><p>Estudia cómo el peso se descompone respecto a la superficie de una rampa.</p></div>
+        <span class="tag">Mecánica</span>
+      </div>
+      <details class="explain" open>
+        <summary>Antes de experimentar: ¿qué debemos reconocer?</summary>
+        <div class="explain-body">
+          <p>El peso siempre apunta verticalmente hacia abajo. En un plano inclinado conviene descomponerlo en dos componentes: una paralela a la rampa y otra perpendicular a ella. La normal es perpendicular a la superficie; la fricción se opone al deslizamiento.</p>
+          <div class="formula-grid">
+            <div class="formula-card"><span>Peso</span><strong>P = mg</strong></div>
+            <div class="formula-card"><span>Componente paralela</span><strong>P∥ = mg sen θ</strong></div>
+            <div class="formula-card"><span>Componente perpendicular</span><strong>P⊥ = mg cos θ</strong></div>
+            <div class="formula-card"><span>Normal (sin otras fuerzas perpendiculares)</span><strong>N = mg cos θ</strong></div>
+          </div>
+          <p class="small-note">Usaremos g = 9,81 m/s². Usaremos un modelo didáctico simplificado con un mismo coeficiente para el límite de fricción estática y la fricción cinética: si la fricción puede equilibrar la componente paralela, el bloque permanece en reposo; si no, desliza y usamos f = μN.</p>
+        </div>
+      </details>
+
+      <div class="two-col">
+        <article class="card controls-card">
+          <div class="card-title"><div><span class="section-kicker">MODIFICA EL SISTEMA</span><h3>Parámetros de la rampa</h3></div><button class="text-button" id="reset-plane">Restablecer</button></div>
+          <div class="control-row"><label for="plane-angle">Ángulo de inclinación <b id="plane-angle-value">30°</b></label><input id="plane-angle" type="range" min="5" max="55" step="1" value="30"><div class="range-ends"><span>5°</span><span>55°</span></div></div>
+          <div class="control-row"><label for="plane-mass">Masa del bloque <b id="plane-mass-value">5 kg</b></label><input id="plane-mass" type="range" min="1" max="20" step="0.5" value="5"><div class="range-ends"><span>1 kg</span><span>20 kg</span></div></div>
+          <div class="control-row"><label for="plane-mu">Coeficiente de fricción μ <b id="plane-mu-value">0,20</b></label><input id="plane-mu" type="range" min="0" max="0.8" step="0.01" value="0.2"><div class="range-ends"><span>0</span><span>0,80</span></div></div>
+          <div class="button-row"><button class="button primary" id="release-block">▶ Soltar el bloque</button><button class="button secondary" id="reset-block">↺ Reiniciar movimiento</button></div>
+          <p class="status-line" id="plane-status" aria-live="polite">Modifica los parámetros y suelta el bloque para observar el movimiento.</p>
+        </article>
+        <article class="card scene-card">
+          <div class="card-title"><div><span class="section-kicker">SIMULACIÓN</span><h3>Movimiento sobre la rampa</h3></div><span class="live-dot">EN VIVO</span></div>
+          <svg id="ramp-scene" viewBox="0 0 700 330" role="img" aria-label="Bloque situado sobre un plano inclinado"></svg>
+          <div class="metrics three">
+            <div><span>Aceleración</span><strong id="plane-acc">2,40 <small>m/s²</small></strong></div>
+            <div><span>Velocidad</span><strong id="plane-vel">0,00 <small>m/s</small></strong></div>
+            <div><span>Distancia</span><strong id="plane-dist">0,00 <small>m</small></strong></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="two-col lower-grid">
+        <article class="card diagram-card">
+          <div class="card-title"><div><span class="section-kicker">DIAGRAMA DE CUERPO LIBRE</span><h3>Identifica las fuerzas y componentes</h3></div></div>
+          <svg id="plane-diagram" viewBox="0 0 700 390" role="img" aria-label="Diagrama de cuerpo libre del bloque sobre la rampa"></svg>
+          <div class="legend"><span><i class="swatch weight"></i>Peso</span><span><i class="swatch normal"></i>Normal</span><span><i class="swatch friction"></i>Fricción</span><span><i class="swatch component"></i>Componentes del peso</span></div>
+        </article>
+        <article class="card calculation-card">
+          <div class="card-title"><div><span class="section-kicker">MODELO MATEMÁTICO</span><h3>De las fuerzas a la aceleración</h3></div></div>
+          <div class="calculation-list" id="plane-calculation"></div>
+          <button class="button secondary full" id="toggle-plane-steps">Ver procedimiento paso a paso</button>
+          <div class="steps-box" id="plane-steps" hidden></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-door">
+      <div class="section-heading">
+        <div><span class="section-kicker">DINÁMICA ROTACIONAL</span><h2>¿Por qué una puerta gira?</h2><p>Explora cómo la fuerza, la distancia al eje y el ángulo determinan el torque.</p></div>
+        <span class="tag">Torque</span>
+      </div>
+      <details class="explain" open>
+        <summary>Antes de experimentar: ¿qué es el torque?</summary>
+        <div class="explain-body">
+          <p>El torque mide la capacidad de una fuerza para producir rotación respecto a un eje. No basta con saber cuánta fuerza se aplica: también importa dónde y en qué dirección se aplica.</p>
+          <div class="formula-main">τ = rF sen(θ)</div>
+          <p><b>r</b> es la distancia desde el eje hasta el punto de aplicación, <b>F</b> es la magnitud de la fuerza y <b>θ</b> es el ángulo entre el brazo de palanca y la fuerza. El torque es máximo cuando la fuerza es perpendicular y es cero cuando la fuerza apunta a lo largo del brazo.</p>
+        </div>
+      </details>
+      <div class="two-col">
+        <article class="card controls-card">
+          <div class="card-title"><div><span class="section-kicker">MODIFICA LA FUERZA</span><h3>Parámetros de la puerta</h3></div><button class="text-button" id="reset-door">Restablecer</button></div>
+          <div class="control-row"><label for="door-force">Fuerza aplicada <b id="door-force-value">40 N</b></label><input id="door-force" type="range" min="0" max="100" step="1" value="40"><div class="range-ends"><span>0 N</span><span>100 N</span></div></div>
+          <div class="control-row"><label for="door-arm">Distancia a las bisagras <b id="door-arm-value">0,80 m</b></label><input id="door-arm" type="range" min="0.1" max="1" step="0.05" value="0.8"><div class="range-ends"><span>0,10 m</span><span>1 m</span></div></div>
+          <div class="control-row"><label for="door-angle">Ángulo entre fuerza y puerta <b id="door-angle-value">90°</b></label><input id="door-angle" type="range" min="0" max="180" step="5" value="90"><div class="range-ends"><span>0°</span><span>180°</span></div></div>
+          <div class="control-row"><label for="door-mass">Masa de la puerta <b id="door-mass-value">20 kg</b></label><input id="door-mass" type="range" min="10" max="40" step="1" value="20"><div class="range-ends"><span>10 kg</span><span>40 kg</span></div></div>
+          <div class="control-row"><label>Sentido de aplicación</label><div class="segmented" role="group" aria-label="Sentido de giro"><button class="selected" data-sense="1">Antihorario</button><button data-sense="-1">Horario</button></div></div>
+          <div class="button-row"><button class="button primary" id="apply-torque">↻ Aplicar fuerza</button><button class="button secondary" id="reset-door-motion">Reiniciar puerta</button></div>
+          <p class="status-line" id="door-status" aria-live="polite">Ajusta los controles y aplica la fuerza para observar la rotación.</p>
+        </article>
+        <article class="card scene-card">
+          <div class="card-title"><div><span class="section-kicker">EXPERIMENTO INTERACTIVO</span><h3>Vista superior de la puerta</h3></div><span class="live-dot">EN VIVO</span></div>
+          <svg id="door-scene" viewBox="0 0 700 360" role="img" aria-label="Puerta con bisagras y fuerza aplicada en la manija"></svg>
+          <div class="metrics three">
+            <div><span>Torque</span><strong id="door-torque">32,0 <small>N·m</small></strong></div>
+            <div><span>Momento de inercia</span><strong id="door-inertia">6,67 <small>kg·m²</small></strong></div>
+            <div><span>Aceleración angular</span><strong id="door-alpha">4,80 <small>rad/s²</small></strong></div>
+          </div>
+        </article>
+      </div>
+      <article class="card full-card">
+        <div class="card-title"><div><span class="section-kicker">RELACIÓN MATEMÁTICA</span><h3>¿Cómo se obtiene la aceleración angular?</h3></div></div>
+        <div class="torque-equation-grid">
+          <div><span>Torque aplicado</span><strong id="door-torque-work">τ = 0,80 · 40 · sen(90°) = 32 N·m</strong></div>
+          <div><span>Momento de inercia de puerta uniforme respecto a bisagras</span><strong id="door-inertia-work">I = ⅓ ML² = 6,67 kg·m²</strong></div>
+          <div><span>Segunda ley de Newton para rotación</span><strong id="door-alpha-work">α = τ/I = 4,80 rad/s²</strong></div>
+        </div>
+        <p class="small-note">Modelo simplificado: la puerta se considera una lámina uniforme que gira alrededor de un eje fijo en las bisagras. Se desprecia la fricción del eje y la resistencia del aire. La animación aplica el torque durante un intervalo breve.</p>
+      </article>
+    </section>
+
+    <section class="panel" id="panel-beam">
+      <div class="section-heading">
+        <div><span class="section-kicker">EQUILIBRIO ROTACIONAL</span><h2>¿Cuándo se equilibra una viga?</h2><p>Compara los torques de las fuerzas que actúan a ambos lados del punto de apoyo.</p></div>
+        <span class="tag">Sumatoria de torques</span>
+      </div>
+      <details class="explain" open>
+        <summary>Antes de experimentar: ¿qué significa equilibrio rotacional?</summary>
+        <div class="explain-body"><p>Una fuerza aplicada a cierta distancia del punto de giro produce un torque. Para que no haya aceleración angular, la suma algebraica de los torques debe ser cero: los torques horarios y antihorarios se compensan.</p><div class="formula-main">Στ = 0</div><p>En esta actividad tomaremos como positivo el sentido antihorario y negativo el horario. La viga se analiza respecto al apoyo central. Para el equilibrio estático completo también se requiere que la suma de fuerzas sea cero; aquí nos concentraremos en el equilibrio rotacional.</p></div>
+      </details>
+      <div class="two-col">
+        <article class="card controls-card">
+          <div class="card-title"><div><span class="section-kicker">ORGANIZA LAS CARGAS</span><h3>Fuerzas sobre la viga</h3></div><button class="text-button" id="reset-beam">Restablecer</button></div>
+          <div class="load-control"><h4>Carga 1 <span>↓</span></h4><div class="control-row"><label for="load1-force">Peso aplicado <b id="load1-force-value">30 N</b></label><input id="load1-force" type="range" min="0" max="100" step="5" value="30"></div><div class="control-row"><label for="load1-pos">Posición respecto al apoyo <b id="load1-pos-value">−1,5 m</b></label><input id="load1-pos" type="range" min="-2" max="2" step="0.1" value="-1.5"></div></div>
+          <div class="load-control"><h4>Carga 2 <span>↓</span></h4><div class="control-row"><label for="load2-force">Peso aplicado <b id="load2-force-value">30 N</b></label><input id="load2-force" type="range" min="0" max="100" step="5" value="30"></div><div class="control-row"><label for="load2-pos">Posición respecto al apoyo <b id="load2-pos-value">1,5 m</b></label><input id="load2-pos" type="range" min="-2" max="2" step="0.1" value="1.5"></div></div>
+          <div class="load-control"><h4>Carga 3 <span>↓</span></h4><div class="control-row"><label for="load3-force">Peso aplicado <b id="load3-force-value">0 N</b></label><input id="load3-force" type="range" min="0" max="100" step="5" value="0"></div><div class="control-row"><label for="load3-pos">Posición respecto al apoyo <b id="load3-pos-value">0,5 m</b></label><input id="load3-pos" type="range" min="-2" max="2" step="0.1" value="0.5"></div></div>
+        </article>
+        <article class="card scene-card">
+          <div class="card-title"><div><span class="section-kicker">DIAGRAMA DE LA VIGA</span><h3>Observa el sentido de giro</h3></div><span class="live-dot">EN VIVO</span></div>
+          <svg id="beam-scene" viewBox="0 0 700 330" role="img" aria-label="Viga apoyada en un punto central con cargas"></svg>
+          <div class="metrics three">
+            <div><span>Torque antihorario</span><strong id="beam-ccw">45 <small>N·m</small></strong></div>
+            <div><span>Torque horario</span><strong id="beam-cw">45 <small>N·m</small></strong></div>
+            <div><span>Torque neto</span><strong id="beam-net">0 <small>N·m</small></strong></div>
+          </div>
+          <div class="balance-banner balanced" id="beam-balance" aria-live="polite">✓ Equilibrio rotacional</div>
+        </article>
+      </div>
+      <article class="card full-card">
+        <div class="card-title"><div><span class="section-kicker">SUMATORIA ALGEBRAICA</span><h3>Calcula los torques de cada carga</h3></div></div>
+        <div id="beam-calculation" class="beam-calculation"></div>
+        <p class="small-note">Tomamos τ = −rF para cada carga vertical hacia abajo: a la derecha del apoyo produce giro horario (negativo) y a la izquierda produce giro antihorario (positivo). El torque neto es la suma de todos los torques.</p>
+      </article>
+    </section>
+
+    <section class="panel" id="panel-challenge">
+      <div class="section-heading">
+        <div><span class="section-kicker">PON A PRUEBA LO APRENDIDO</span><h2>Reto contrarreloj</h2><p>Identifica vectores, interpreta diagramas y resuelve cálculos de fuerzas y torque.</p></div>
+        <span class="tag challenge-tag">90 segundos</span>
+      </div>
+      <div class="challenge-intro card" id="challenge-intro"><div class="challenge-icon">⏱</div><div><h3>¿Cuántas preguntas puedes resolver?</h3><p>Responde correctamente para avanzar. Las preguntas que falles regresarán al final, como en los retos de notación y pendiente.</p></div><button class="button primary" id="start-quiz">Iniciar reto</button></div>
+      <div class="quiz-stats" id="quiz-stats" hidden><div><span>Tiempo</span><strong id="quiz-time">01:30</strong></div><div><span>Correctas</span><strong id="quiz-correct">0</strong></div><div><span>Errores</span><strong id="quiz-errors">0</strong></div><div><span>Pendientes</span><strong id="quiz-remaining">8</strong></div></div>
+      <article class="card quiz-card" id="quiz-card" hidden>
+        <div class="quiz-progress"><span id="quiz-progress-label">Pregunta 1</span><div class="progress-track"><i id="quiz-progress-bar"></i></div></div>
+        <div id="quiz-question"></div>
+        <p class="quiz-feedback" id="quiz-feedback" aria-live="polite"></p>
+        <button class="button primary full" id="next-question" hidden>Continuar</button>
+      </article>
+      <article class="card quiz-result" id="quiz-result" hidden></article>
+    </section>
+
+    <footer class="footer"><span>LABORATORIO DE FÍSICA</span><span>Comprender un modelo también es aprender a experimentar.</span></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
